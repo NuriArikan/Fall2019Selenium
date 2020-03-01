@@ -15,6 +15,7 @@ public class BasicNavigation {
         // in selenium, everything starts from WebDriver interface
         // ChromeDriver extends RemoteWebDriver --> implements WebDriver
         driver.get("http://google.com"); // to open a website
+        driver.manage().window().maximize(); // to maximize browser
 
         Thread.sleep(3000);// for demo. wait 3 seconds
         // method that return page title
