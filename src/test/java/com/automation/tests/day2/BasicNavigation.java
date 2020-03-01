@@ -49,6 +49,10 @@ public class BasicNavigation {
         Thread.sleep(3000);//for demo, wait 3 seconds
         System.out.println("Title: "+driver.getTitle());
         //driver.getTitle() - returns page title of the page that is currently opened
+
+        driver.navigate().refresh(); // to reload page
+        Thread.sleep(3000); // for demo, wait 3 seconds
+
         //must be at the end
         driver.close();//to close browser
         //browser cannot close itself
