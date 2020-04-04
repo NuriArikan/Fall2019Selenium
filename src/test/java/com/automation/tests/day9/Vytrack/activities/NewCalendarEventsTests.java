@@ -3,17 +3,15 @@ package com.automation.tests.day9.Vytrack.activities;
 import com.automation.pages.LoginPage;
 import com.automation.pages.activities.CalendarEventsPage;
 import com.automation.tests.day9.Vytrack.AbstractTestBase;
+
+import com.automation.utilities.BrowserUtils;
 import com.automation.utilities.DateTimeUtilities;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-
 public class NewCalendarEventsTests extends AbstractTestBase {
-
-
     LoginPage loginPage = new LoginPage();
     CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
     /**
@@ -42,7 +40,7 @@ public class NewCalendarEventsTests extends AbstractTestBase {
      * Verify that difference between start and end time is 1 hour
      **/
     @Test
-    public void timeDifferenceTest(){
+    public void timeDifferenceTest() {
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         calendarEventsPage.clickToCreateCalendarEvent();
@@ -52,25 +50,47 @@ public class NewCalendarEventsTests extends AbstractTestBase {
         long actual = DateTimeUtilities.getTimeDifference(startTime, endTime, format);
         Assert.assertEquals(actual, 1, "Time difference is not correct");
     }
-
-//    ::::use qa1::::
-//    Test Case: Verify calendar events table
-//    Login as store manager
-//    Go to Activities --> Calendar Events
-//    And verify that column names displayed:
-//            |TITLE            |
-//            |CALENDAR         |
-//            |START            |
-//            |END              |
-//            |RECURRENT        |
-//            |RECURRENCE       |
-//            |INVITATION STATUS|
-
+    /**
+     * Test Case: Verify calendar events table
+     * Login as store manager
+     * Go to Activities --> Calendar Events
+     * And verify that column names displayed:
+     * |TITLE            |
+     * |CALENDAR         |
+     * |START            |
+     * |END              |
+     * |RECURRENT        |
+     * |RECURRENCE       |
+     * |INVITATION STATUS|
+     */
     @Test
-    public void verifyColumnNamesTest(){
+    public void verifyColumnNamesTest() {
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         List<String> expected = Arrays.asList("TITLE", "CALENDAR", "START", "END", "RECURRENT", "RECURRENCE", "INVITATION STATUS");
         Assert.assertEquals(calendarEventsPage.getColumnNames(), expected);
+    }
+    //    public Object[] eve
+    @Test(dataProvider = "calendarEvents")
+    public void createCalendarEventTest(String title, String description) {
+        //only for extent report. To create a test in html report
+        test = report.createTest("Create calendar event");
+        loginPage.login();
+        calendarEventsPage.navigateTo("Activities", "Calendar Events");
+        calendarEventsPage.clickToCreateCalendarEvent();
+        calendarEventsPage.enterCalendarEventTitle(title);
+        calendarEventsPage.enterCalendarEventDescription(description);
+        calendarEventsPage.clickOnSaveAndClose();
+        //verify that calendar event info is correct
+        Assert.assertEquals(calendarEventsPage.getGeneralInfoDescriptionText(), description);
+        Assert.assertEquals(calendarEventsPage.getGeneralInfoTitleText(), title);
+        //for extent report. specify that test passed in report (if all assertions passed)
+        test.pass("Calendar event was created successfully!");
+    }
+    @DataProvider
+    public Object[][] calendarEvents() {
+        return new Object[][]{
+                {"Daily stand-up", "Scrum meeting to provide updates"}
+        };
     }
 }
