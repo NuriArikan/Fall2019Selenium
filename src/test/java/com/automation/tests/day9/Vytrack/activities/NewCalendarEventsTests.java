@@ -3,7 +3,6 @@ package com.automation.tests.day9.Vytrack.activities;
 import com.automation.pages.LoginPage;
 import com.automation.pages.activities.CalendarEventsPage;
 import com.automation.tests.day9.Vytrack.AbstractTestBase;
-
 import com.automation.utilities.BrowserUtils;
 import com.automation.utilities.DateTimeUtilities;
 import org.testng.Assert;
@@ -23,6 +22,9 @@ public class NewCalendarEventsTests extends AbstractTestBase {
      **/
     @Test
     public void defaultOptionsTest() {
+        test = report.createTest("Verify default login options");
+        LoginPage loginPage = new LoginPage();
+        CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         calendarEventsPage.clickToCreateCalendarEvent();
@@ -30,6 +32,7 @@ public class NewCalendarEventsTests extends AbstractTestBase {
         String actualStartDate = calendarEventsPage.getStartDate();
         String expectedStartDate = DateTimeUtilities.getCurrentDate("MMM dd, yyyy");
         Assert.assertEquals(actualStartDate, expectedStartDate);
+        test.pass("Default options verified");
     }
     /**
      * 35 minutes until 4:05
@@ -41,6 +44,9 @@ public class NewCalendarEventsTests extends AbstractTestBase {
      **/
     @Test
     public void timeDifferenceTest() {
+        test = report.createTest("Verify time difference");
+        LoginPage loginPage = new LoginPage();
+        CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         calendarEventsPage.clickToCreateCalendarEvent();
@@ -49,6 +55,7 @@ public class NewCalendarEventsTests extends AbstractTestBase {
         String format = "h:mm a";//format 5:15 AM for example
         long actual = DateTimeUtilities.getTimeDifference(startTime, endTime, format);
         Assert.assertEquals(actual, 1, "Time difference is not correct");
+        test.pass("Time difference verified");
     }
     /**
      * Test Case: Verify calendar events table
@@ -65,16 +72,26 @@ public class NewCalendarEventsTests extends AbstractTestBase {
      */
     @Test
     public void verifyColumnNamesTest() {
+        test = report.createTest("Verify column names");
+        LoginPage loginPage = new LoginPage();
+        CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         List<String> expected = Arrays.asList("TITLE", "CALENDAR", "START", "END", "RECURRENT", "RECURRENCE", "INVITATION STATUS");
         Assert.assertEquals(calendarEventsPage.getColumnNames(), expected);
+        test.pass("Column names verified");
     }
     //    public Object[] eve
     @Test(dataProvider = "calendarEvents")
     public void createCalendarEventTest(String title, String description) {
+        //if you have more one test, and 1st pass but others failing,
+        //you are getting session id is null exception
+        //because driver object was not initialized in time
+        //just create page objects inside a test
+        LoginPage loginPage = new LoginPage();
+        CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
         //only for extent report. To create a test in html report
-        test = report.createTest("Create calendar event");
+        test = report.createTest("Create calendar event for " + title);
         loginPage.login();
         calendarEventsPage.navigateTo("Activities", "Calendar Events");
         calendarEventsPage.clickToCreateCalendarEvent();
@@ -90,7 +107,9 @@ public class NewCalendarEventsTests extends AbstractTestBase {
     @DataProvider
     public Object[][] calendarEvents() {
         return new Object[][]{
-                {"Daily stand-up", "Scrum meeting to provide updates"}
+                {"Daily stand-up", "Scrum meeting to provide updates"},
+                {"Sprint Review", "Scrum meeting where team discussing previous sprint"},
+                {"Sprint Planning", "Scrum meeting where team discussing backlog for following sprint"}
         };
     }
 }

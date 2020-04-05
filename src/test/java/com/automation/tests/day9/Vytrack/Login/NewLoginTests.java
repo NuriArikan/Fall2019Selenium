@@ -31,16 +31,19 @@ public class NewLoginTests extends AbstractTestBase {
      * Enter wrong credentials and verify warning message
      */
     @Test
-    public void verifyWarningMessage(){
+    public void verifyWarningMessage() {
         test = report.createTest("Verify warning message");
+        BrowserUtils.wait(3);
         LoginPage loginPage = new LoginPage();
-        loginPage.login("wrong","wrong");
-        Assert.assertEquals(loginPage.getWarningMessageText(),"Invalid user name or password.");
+        loginPage.login("wrong", "wrong");
+        BrowserUtils.wait(3);
+        Assert.assertEquals(loginPage.getWarningMessageText(), "Invalid user name or password.");
         //take a screenshot
-        BrowserUtils.getScreenshot("Warning_message");
+        BrowserUtils.wait(3);
+        BrowserUtils.getScreenshot("warning_message");
+        BrowserUtils.wait(3);
         test.pass("Warning message is displayed");
     }
-
     @Test(dataProvider = "credentials")
     public void loginWithDDT(String userName, String password) {
         test = report.createTest("Verify page title as " + userName);

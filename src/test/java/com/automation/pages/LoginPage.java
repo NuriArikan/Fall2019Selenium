@@ -22,7 +22,7 @@ public class LoginPage {
     @FindBy (linkText = "Forgot your password")
     private WebElement forgotPassword;
 
-    @FindBy(linkText = "[class='alert alert-error']")
+    @FindBy(xpath = "/html/body/div[1]/div/div/div/div[1]/form/fieldset/div[1]/div")
     private WebElement warningMessage;
 
 

@@ -39,11 +39,13 @@ public class CalendarEventsPage extends AbstractPageBase {
     }
     public void enterCalendarEventDescription(String description) {
         //wait until frame is available and switch to it
+        BrowserUtils.waitForPageToLoad(20);
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(descriptionFrame));
         descriptionTextArea.sendKeys(description);
         driver.switchTo().defaultContent();//exit from the frame
     }
     public void clickOnSaveAndClose() {
+        BrowserUtils.waitForPageToLoad(20);
         wait.until(ExpectedConditions.elementToBeClickable(saveAndClose)).click();
     }
     public String getGeneralInfoTitleText() {
@@ -55,7 +57,6 @@ public class CalendarEventsPage extends AbstractPageBase {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Description']/following-sibling::div//div")));
         return generalInfoDescription.getText();
     }
-
     //#############################################################
     public List<String> getColumnNames() {
         BrowserUtils.waitForPageToLoad(20);
